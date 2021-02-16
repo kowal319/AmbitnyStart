@@ -46,6 +46,21 @@ public class HelloServiceTest {
         assertEquals(FALLBACK_ID_WELCOME + " " + HelloService.FALLBACK_NAME + "!", result);
     }
 
+    @Test
+    public void test_prepareGreeting_nonExistingLang_returnsGreetingWithFallbackLang(){
+        var mockRepository = new LangRepository(){
+        @Override
+                Optional<Lang> findById(Long id){
+                return Optional.empty();
+            }
+            };
+
+        var SUT = new HelloService(mockRepository);
+        var result = SUT.prepareGreeting(null, "-1");
+        assertEquals(HelloService.FALLBACK_LANG.getWelcomeMsg() + " " + HelloService.FALLBACK_NAME + "!", result);
+    }
+    
+
     private LangRepository fallbackLangIdRepository() {
         return new LangRepository() {
             @Override
